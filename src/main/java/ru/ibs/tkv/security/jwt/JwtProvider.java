@@ -36,6 +36,16 @@ public class JwtProvider {
                 .compact();
     }
 
+    public String createRefreshToken(Authentication authentication) {
+        return BEARER_PREFIX + Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("authorities", authentication.getAuthorities())
+                .setIssuedAt(new Date())
+                .setExpiration(java.sql.Date.valueOf(LocalDateTime.now().toLocalDate().plusDays(30)))
+                .signWith(Keys.hmacShaKeyFor(KEY.getBytes()))
+                .compact();
+    }
+
     public String getUsername(String token) {
         return Jwts.parser()
                 .setSigningKey(Keys.hmacShaKeyFor(KEY.getBytes()))

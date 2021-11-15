@@ -26,7 +26,7 @@ public class AccessAndRefreshTokenController {
         accessAndRefreshTokens.setAccessToken(jwtProvider.createToken(authentication));
         accessAndRefreshTokens.setRefreshToken(jwtProvider.createRefreshToken(authentication));
         response.addHeader(HttpHeaders.AUTHORIZATION, accessAndRefreshTokens.getAccessToken());
-        response.setContentType("text/json");
+        response.setContentType("application/json");
         return accessAndRefreshTokens;
     }
 }

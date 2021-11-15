@@ -21,6 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import ru.ibs.tkv.security.auth.ApplicationUser;
 import ru.ibs.tkv.security.auth.ApplicationUserService;
+import ru.ibs.tkv.security.jwt.JwtProvider;
+import ru.ibs.tkv.security.jwt.JwtTokenVerifierFilter;
 import ru.ibs.tkv.security.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 
 import static ru.ibs.tkv.security.config.ApplicationUserPermission.TASK_WRITE;
@@ -34,6 +36,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final ApplicationUserService applicationUserService;
+    private final JwtProvider jwtProvider;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -41,16 +44,17 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager()))
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtProvider))
+                .addFilterAfter(new JwtTokenVerifierFilter(jwtProvider), JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/", "index").permitAll()
-//                .antMatchers("/manager/api/**").hasRole(MANAGER.name())
-//                .antMatchers(HttpMethod.PUT,"/api/task/**").hasAnyAuthority(TASK_WRITE.getPermission())
+                .antMatchers("manager/api/**").hasRole(MANAGER.name())
+//                .antMatchers(HttpMethod.DELETE, "/api/task/**").hasAuthority(TASK_WRITE.getPermission())
+//                .antMatchers(HttpMethod.POST, "/api/task/**").hasAuthority(TASK_WRITE.getPermission())
+//                .antMatchers(HttpMethod.PUT, "/api/task/**").hasAuthority(TASK_WRITE.getPermission())
 //                .antMatchers("/api/task/**").hasAnyRole(EMPLOYEE.name(), TRAINEE.name())
                 .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
+                .authenticated();
     }
 
     @Override

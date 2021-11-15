@@ -15,13 +15,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 @Slf4j
 @RequiredArgsConstructor
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final AuthenticationManager manager;
-//    private final JwtProvider jwtProvider;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -30,16 +29,16 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                     new ObjectMapper().readValue(request.getInputStream(), UsernamePasswordAuthRequest.class);
             Authentication authentication = new UsernamePasswordAuthenticationToken(usernamePasswordAuthRequest.getUsername(), usernamePasswordAuthRequest.getPassword());
 
-            return manager.authenticate(authentication);
+            return authenticationManager.authenticate(authentication);
         } catch (IOException e) {
             log.error("Unexpected error", e);
             throw new RuntimeException(e);
         }
     }
-//
-//    @Override
-//    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-//        String token = jwtProvider.createToken(authResult);
-//        response.addHeader(HttpHeaders.AUTHORIZATION, token);
-//    }
+
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        String token = jwtProvider.createToken(authResult);
+        response.addHeader(HttpHeaders.AUTHORIZATION, token);
+    }
 }

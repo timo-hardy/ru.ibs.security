@@ -12,7 +12,8 @@ public enum ApplicationUserRole {
     // Это роли
     EMPLOYEE(Sets.newHashSet(EMPLOYEE_READ, TASK_READ, TASK_WRITE)),
     MANAGER(Sets.newHashSet(EMPLOYEE_READ, EMPLOYEE_WRITE, TASK_READ, TASK_WRITE)),
-    TRAINEE(Sets.newHashSet(EMPLOYEE_READ, TASK_READ));
+    TRAINEE(Sets.newHashSet(EMPLOYEE_READ, TASK_READ)),
+    SCRUM_MASTER(Sets.newHashSet(EMPLOYEE_READ, TASK_WRITE));
 
     private final Set<ApplicationUserPermission> permissions;
 

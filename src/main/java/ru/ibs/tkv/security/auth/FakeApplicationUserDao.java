@@ -53,6 +53,16 @@ public class FakeApplicationUserDao implements ApplicationUserDao {
                         true,
                         true,
                         true
+                ),
+
+                new ApplicationUser(
+                        "Vasya",
+                        passwordEncoder.encode("vasya123"),
+                        TRAINEE.getAuthorities(),
+                        true,
+                        true,
+                        true,
+                        true
                 )
         );
     }

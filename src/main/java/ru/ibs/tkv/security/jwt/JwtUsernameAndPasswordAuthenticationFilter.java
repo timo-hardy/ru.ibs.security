@@ -41,10 +41,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-//        String accsess_token = jwtProvider.createToken(authResult);
-//        String refresh_token = jwtProvider.createToken(authResult);
-//        response.addHeader(HttpHeaders.AUTHORIZATION, accsess_token);
-//        response.setContentType("application/json");
+
         AccessAndRefreshTokens accessAndRefreshTokens = new AccessAndRefreshTokens();
         accessAndRefreshTokens.setAccessToken(jwtProvider.createRefreshToken(authResult));
         accessAndRefreshTokens.setRefreshToken(jwtProvider.createRefreshToken(authResult));

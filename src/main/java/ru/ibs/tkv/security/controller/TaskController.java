@@ -1,5 +1,6 @@
 package ru.ibs.tkv.security.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.ibs.tkv.security.model.Task;
 
@@ -15,6 +16,7 @@ public class TaskController {
             new Task(2L, "Update", "Update properties of db in dev stand")
     );
 
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'TRAINEE')")
     @GetMapping("{id}")
     public Task getTask(@PathVariable("id") Long taskId) {
         return TASKS.stream()
@@ -25,6 +27,7 @@ public class TaskController {
                 ));
     }
 
+    @PreAuthorize("hasAuthority('task:write')")
     @PutMapping("{id}")
     public void updateTask(@PathVariable("id") Long taskId) {
         System.out.println("Task update");

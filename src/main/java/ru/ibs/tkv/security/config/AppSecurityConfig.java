@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,6 +21,7 @@ import static ru.ibs.tkv.security.config.ApplicationUserRole.*;
 @RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
@@ -30,36 +32,40 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "index").permitAll()
-                .antMatchers("/manager/api/**").hasRole(MANAGER.name())
-                .antMatchers(HttpMethod.PUT,"/api/task").hasAnyAuthority(TASK_WRITE.getPermission())
-                .antMatchers("/api/task/**").hasAnyRole(EMPLOYEE.name(), TRAINEE.name())
+//                .antMatchers("/manager/api/**").hasRole(MANAGER.name())
+//                .antMatchers(HttpMethod.PUT,"/api/task/**").hasAnyAuthority(TASK_WRITE.getPermission())
+//                .antMatchers("/api/task/**").hasAnyRole(EMPLOYEE.name(), TRAINEE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
                 .httpBasic();
     }
 
-    @Bean
-    @Override
-    protected UserDetailsService userDetailsService() {
-        UserDetails oliverUser = User.builder()
-                .username("oliver")
-                .password(passwordEncoder.encode("password"))
-                .roles(EMPLOYEE.name())
-                .build();
 
-        UserDetails henryUser = User.builder()
-                .username("henry")
-                .password(passwordEncoder.encode("password123"))
-                .roles(MANAGER.name())
-                .build();
 
-        UserDetails emmaUser = User.builder()
-                .username("emma")
-                .password(passwordEncoder.encode("password123"))
-                .roles(TRAINEE.name())
-                .build();
 
-        return new InMemoryUserDetailsManager(oliverUser, henryUser, emmaUser);
-    }
+
+//    @Bean
+//    @Override
+//    protected UserDetailsService userDetailsService() {
+//        UserDetails oliverUser = User.builder()
+//                .username("oliver")
+//                .password(passwordEncoder.encode("password"))
+//                .authorities(EMPLOYEE.getAuthorities())
+//                .build();
+//
+//        UserDetails henryUser = User.builder()
+//                .username("henry")
+//                .password(passwordEncoder.encode("password123"))
+//                .authorities(MANAGER.getAuthorities())
+//                .build();
+//
+//        UserDetails emmaUser = User.builder()
+//                .username("emma")
+//                .password(passwordEncoder.encode("password1"))
+//                .authorities(TRAINEE.getAuthorities())
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(oliverUser, henryUser, emmaUser);
+//    }
 }

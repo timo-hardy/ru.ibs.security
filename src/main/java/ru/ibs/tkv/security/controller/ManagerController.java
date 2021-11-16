@@ -54,7 +54,7 @@ public class ManagerController {
 
     @DeleteMapping("/employee/{id}")
     public void fireEmployee(@PathVariable("id") Integer employeeId) {
-        System.out.println("Emplyee " + employeeId + "is fired");
+        System.out.println("Emplyee " + employeeId + "is firedddd");
     }
 
     @PreAuthorize("hasAnyRole('MANAGER','SCRUM_MASTER')")

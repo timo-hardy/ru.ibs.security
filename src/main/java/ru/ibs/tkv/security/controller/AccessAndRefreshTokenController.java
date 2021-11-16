@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ibs.tkv.security.jwt.AccessAndRefreshTokens;
+//import ru.ibs.tkv.security.jwt.AccessAndRefreshTokens;
 import ru.ibs.tkv.security.jwt.JwtProvider;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,15 +18,17 @@ import java.io.IOException;
 public class AccessAndRefreshTokenController {
 
     private final JwtProvider jwtProvider;
-    private final AccessAndRefreshTokens accessAndRefreshTokens;
+//    private final AccessAndRefreshTokens accessAndRefreshTokens;
 
     @GetMapping("/token")
-    public AccessAndRefreshTokens refreshTokens(Authentication authentication, HttpServletResponse response) throws IOException {
-
-        accessAndRefreshTokens.setAccessToken(jwtProvider.createToken(authentication));
-        accessAndRefreshTokens.setRefreshToken(jwtProvider.createRefreshToken(authentication));
-        response.addHeader(HttpHeaders.AUTHORIZATION, accessAndRefreshTokens.getAccessToken());
+    public String refreshTokens(Authentication authentication, HttpServletResponse response) throws IOException {
+//        accessAndRefreshTokens.setAccessToken(jwtProvider.createToken(authentication));
+//        accessAndRefreshTokens.setRefreshToken(jwtProvider.createRefreshToken(authentication));
+        String accessToken = jwtProvider.createToken(authentication);
+        String refreshToken = jwtProvider.createRefreshToken(authentication);
         response.setContentType("application/json");
-        return accessAndRefreshTokens;
+        return accessToken + "\n" + refreshToken;
     }
+
+
 }

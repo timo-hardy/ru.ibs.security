@@ -27,9 +27,10 @@ public class ManagerController {
 
     private static final List<Task> TASKS = Arrays.asList(
             new Task(1L, "Create app", "Need new application"),
-            new Task(2L , "Update properties", "Update properties of db in dev stand")
+            new Task(2L, "Update properties", "Update properties of db in dev stand")
     );
 
+    @PreAuthorize("hasAnyRole('MANAGER','SCRUM_MASTER')")
     @GetMapping("/employee/{id}")
     public Employee getEmployee(@PathVariable("id") Integer employeeId) {
         return EMPLOYEES.stream()
@@ -40,7 +41,7 @@ public class ManagerController {
                 ));
     }
 
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'SCRUM_MASTER')")
     @GetMapping("/task/{id}")
     public Task getTask(@PathVariable("id") Integer taskId) {
         return TASKS.stream()
@@ -56,6 +57,7 @@ public class ManagerController {
         System.out.println("Emplyee " + employeeId + "is fired");
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER','SCRUM_MASTER')")
     @PostMapping("/task/{id}")
     public void createTask(@PathVariable("id") String taskId, @RequestBody Task task) {
         System.out.println("Created new task" + task);
